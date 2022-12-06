@@ -52,6 +52,31 @@ console.log(
 
 //function to ask user info
 const atm = async () => {
+  do {
+    userInfo = await inquirer.prompt([
+      {
+        name: "username",
+        type: "input",
+        message: "Enter your user ID: ",
+      },
+      {
+        name: "pin",
+        type: "password",
+        message: "Enter your 4 digit pin: ",
+      },
+    ]);
+  } while (userInfo?.pin.length !== 4 || userInfo?.username.length < 3);
+  //   checking user's credentials if it is true or not
+  if (bankRecord.find((data) => data.username === userInfo.username)) {
+    if (bankRecord.find((data) => data.pin === userInfo.pin)) {
+      user = bankRecord.find((data) => data.username === userInfo.username);
+      console.log("Your account balance is", chalk.yellow(user?.balance));
+    } else {
+      console.log(chalk.red("You have entered your pin wrong.Please retry!"));
+    }
+  } else {
+    console.log(chalk.red("You have entered wrong user name.Please retry!"));
+  }
   operation = await inquirer.prompt([
     {
       name: "operationToBePerformed",
@@ -61,71 +86,55 @@ const atm = async () => {
   ]);
   switch (operation.operationToBePerformed) {
     case "Withdraw Money":
+      //   asking to how much money customer wants to with draw
       do {
-        userInfo = await inquirer.prompt([
+        amountToBeWithDraw = await inquirer.prompt([
           {
-            name: "username",
-            type: "input",
-            message: "Enter your user ID: ",
-          },
-          {
-            name: "pin",
-            type: "password",
-            message: "Enter your 4 digit pin: ",
+            name: "amount",
+            type: "number",
+            message: "How much money you want to withdraw?",
           },
         ]);
-      } while (userInfo?.pin.length !== 4 || userInfo?.username.length < 3);
-      //   checking user's credentials if it is true or not
-      if (bankRecord.find((data) => data.username === userInfo.username)) {
-        if (bankRecord.find((data) => data.pin === userInfo.pin)) {
-          user = bankRecord.find((data) => data.username === userInfo.username);
-          console.log("Your account balance is", chalk.yellow(user?.balance));
-          //   asking to how much money customer wants to with draw
-          do {
-            amountToBeWithDraw = await inquirer.prompt([
-              {
-                name: "amount",
-                type: "number",
-                message: "How much money you want to withdraw?",
-              },
-            ]);
-          } while (isNaN(Number(amountToBeWithDraw?.amount)));
-          //checking if the user has sufficient balance or not
-          if (user?.balance) {
-            if (user.balance >= Number(amountToBeWithDraw.amount)) {
-              console.log(
-                `The remaining amount is ${
-                  user.balance - Number(amountToBeWithDraw.amount)
-                }`
-              );
-            } else {
-              console.log(chalk.bgRed("You have in sufficient balance."));
-            }
-          }
-        } else {
+      } while (isNaN(Number(amountToBeWithDraw?.amount)));
+      //checking if the user has sufficient balance or not
+      if (user?.balance) {
+        if (user.balance >= Number(amountToBeWithDraw.amount)) {
           console.log(
-            chalk.red("You have entered your pin wrong.Please retry!")
+            `The remaining amount is ${(user.balance =
+              user.balance - Number(amountToBeWithDraw.amount))}`
           );
+        } else {
+          console.log(chalk.bgRed("You have in sufficient balance."));
         }
-      } else {
-        console.log(
-          chalk.red("You have entered wrong user name.Please retry!")
-        );
       }
-      isRepeat = await inquirer.prompt([
+
+      break;
+    case "Transfer Money":
+      let listOfBanks: Array<string> = [
+        "UBL",
+        "ABL",
+        "HBL",
+        "MCB",
+        "NBP",
+        "Meezan Bank",
+      ];
+      let selectedBank: { bank: string } = await inquirer.prompt([
         {
-          name: "repeat",
-          type: "confirm",
-          message: "Do want another operation?",
+          name: "bank",
+          type: "list",
+          choices: listOfBanks,
         },
       ]);
       break;
-    case "Transfer Money":
-      break;
-
-    default:
-      break;
   }
+
+  isRepeat = await inquirer.prompt([
+    {
+      name: "repeat",
+      type: "confirm",
+      message: "Do want another operation?",
+    },
+  ]);
   while (isRepeat.repeat) {
     await atm();
   }

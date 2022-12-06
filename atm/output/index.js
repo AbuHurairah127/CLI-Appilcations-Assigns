@@ -10,7 +10,7 @@ let bankRecord = [
     { username: "ahmadJajja", pin: "1234", balance: 17000000 },
     { username: "jawadAhmad", pin: "1234", balance: 187000000 },
 ];
-let userInfo, user = { username: "", pin: "", balance: 0 }, amountToBeWithDraw, isRepeat;
+let userInfo, user = { username: "", pin: "", balance: 0 }, amountToBeWithDraw, isRepeat, operation;
 //   printing welcome message
 console.log("  ......  ...   ....  ...........  ......       .......     .......    .....       .....  ............  ");
 console.log("  .....  .....  ..... ..........   .....      ..........   ..........  ......     ......  .......... ");
@@ -40,6 +40,23 @@ const atm = async () => {
         if (bankRecord.find((data) => data.pin === userInfo.pin)) {
             user = bankRecord.find((data) => data.username === userInfo.username);
             console.log("Your account balance is", chalk.yellow(user === null || user === void 0 ? void 0 : user.balance));
+        }
+        else {
+            console.log(chalk.red("You have entered your pin wrong.Please retry!"));
+        }
+    }
+    else {
+        console.log(chalk.red("You have entered wrong user name.Please retry!"));
+    }
+    operation = await inquirer.prompt([
+        {
+            name: "operationToBePerformed",
+            type: "list",
+            choices: ["Withdraw Money", "Transfer Money"],
+        },
+    ]);
+    switch (operation.operationToBePerformed) {
+        case "Withdraw Money":
             //   asking to how much money customer wants to with draw
             do {
                 amountToBeWithDraw = await inquirer.prompt([
@@ -53,30 +70,41 @@ const atm = async () => {
             //checking if the user has sufficient balance or not
             if (user === null || user === void 0 ? void 0 : user.balance) {
                 if (user.balance >= Number(amountToBeWithDraw.amount)) {
-                    console.log(`The remaining amount is ${user.balance - Number(amountToBeWithDraw.amount)}`);
+                    console.log(`The remaining amount is ${(user.balance =
+                        user.balance - Number(amountToBeWithDraw.amount))}`);
                 }
                 else {
                     console.log(chalk.bgRed("You have in sufficient balance."));
                 }
             }
-        }
-        else {
-            console.log(chalk.red("You have entered your pin wrong.Please retry!"));
-        }
+            isRepeat = await inquirer.prompt([
+                {
+                    name: "repeat",
+                    type: "confirm",
+                    message: "Do want another operation?",
+                },
+            ]);
+            break;
+        case "Transfer Money":
+            let listOfBanks = [
+                "UBL",
+                "ABL",
+                "HBL",
+                "MCB",
+                "NBP",
+                "Meezan Bank",
+            ];
+            let selectedBank = await inquirer.prompt([
+                {
+                    name: "bank",
+                    type: "list",
+                    choices: listOfBanks,
+                },
+            ]);
+            break;
     }
-    else {
-        console.log(chalk.red("You have entered wrong user name.Please retry!"));
-    }
-    isRepeat = await inquirer.prompt([
-        {
-            name: "repeat",
-            type: "confirm",
-            message: "Do want another operation?",
-        },
-    ]);
     while (isRepeat.repeat) {
         await atm();
     }
-    console.log(isRepeat.repeat);
 };
 await atm();
