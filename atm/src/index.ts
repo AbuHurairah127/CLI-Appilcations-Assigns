@@ -22,7 +22,11 @@ let bankRecord: Array<User> = [
 ];
 let userInfo: User,
   user: User | undefined = { username: "", pin: "", balance: 0 },
-  amountToBeWithDraw: Amount;
+  amountToBeWithDraw: Amount,
+  isRepeat: { repeat: boolean },
+  operation: {
+    operationToBePerformed: string;
+  };
 //   printing welcome message
 console.log(
   "  ......  ...   ....  ...........  ......       .......     .......    .....       .....  ............  "
@@ -48,52 +52,82 @@ console.log(
 
 //function to ask user info
 const atm = async () => {
-  do {
-    userInfo = await inquirer.prompt([
-      {
-        name: "username",
-        type: "input",
-        message: "Enter your user ID: ",
-      },
-      {
-        name: "pin",
-        type: "password",
-        message: "Enter your 4 digit pin: ",
-      },
-    ]);
-  } while (userInfo?.pin.length !== 4 || userInfo?.username.length < 3);
-  //   checking user's credentials if it is true or not
-  if (bankRecord.find((data) => data.username === userInfo.username)) {
-    if (bankRecord.find((data) => data.pin === userInfo.pin)) {
-      user = bankRecord.find((data) => data.username === userInfo.username);
-      console.log("Your account balance is", chalk.yellow(user?.balance));
-      //   asking to how much money customer wants to with draw
+  operation = await inquirer.prompt([
+    {
+      name: "operationToBePerformed",
+      type: "list",
+      choices: ["Withdraw Money", "Transfer Money"],
+    },
+  ]);
+  switch (operation.operationToBePerformed) {
+    case "Withdraw Money":
       do {
-        amountToBeWithDraw = await inquirer.prompt([
+        userInfo = await inquirer.prompt([
           {
-            name: "amount",
-            type: "number",
-            message: "How much money you want to withdraw?",
+            name: "username",
+            type: "input",
+            message: "Enter your user ID: ",
+          },
+          {
+            name: "pin",
+            type: "password",
+            message: "Enter your 4 digit pin: ",
           },
         ]);
-      } while (isNaN(Number(amountToBeWithDraw?.amount)));
-      //checking if the user has sufficient balance or not
-      if (user?.balance) {
-        if (user.balance >= Number(amountToBeWithDraw.amount)) {
-          console.log(
-            `The remaining amount is ${
-              user.balance - Number(amountToBeWithDraw.amount)
-            }`
-          );
+      } while (userInfo?.pin.length !== 4 || userInfo?.username.length < 3);
+      //   checking user's credentials if it is true or not
+      if (bankRecord.find((data) => data.username === userInfo.username)) {
+        if (bankRecord.find((data) => data.pin === userInfo.pin)) {
+          user = bankRecord.find((data) => data.username === userInfo.username);
+          console.log("Your account balance is", chalk.yellow(user?.balance));
+          //   asking to how much money customer wants to with draw
+          do {
+            amountToBeWithDraw = await inquirer.prompt([
+              {
+                name: "amount",
+                type: "number",
+                message: "How much money you want to withdraw?",
+              },
+            ]);
+          } while (isNaN(Number(amountToBeWithDraw?.amount)));
+          //checking if the user has sufficient balance or not
+          if (user?.balance) {
+            if (user.balance >= Number(amountToBeWithDraw.amount)) {
+              console.log(
+                `The remaining amount is ${
+                  user.balance - Number(amountToBeWithDraw.amount)
+                }`
+              );
+            } else {
+              console.log(chalk.bgRed("You have in sufficient balance."));
+            }
+          }
         } else {
-          console.log(chalk.bgRed("You have in sufficient balance."));
+          console.log(
+            chalk.red("You have entered your pin wrong.Please retry!")
+          );
         }
+      } else {
+        console.log(
+          chalk.red("You have entered wrong user name.Please retry!")
+        );
       }
-    } else {
-      console.log(chalk.red("You have entered your pin wrong.Please retry!"));
-    }
-  } else {
-    console.log(chalk.red("You have entered wrong user name.Please retry!"));
+      isRepeat = await inquirer.prompt([
+        {
+          name: "repeat",
+          type: "confirm",
+          message: "Do want another operation?",
+        },
+      ]);
+      break;
+    case "Transfer Money":
+      break;
+
+    default:
+      break;
+  }
+  while (isRepeat.repeat) {
+    await atm();
   }
 };
 

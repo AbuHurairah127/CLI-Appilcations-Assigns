@@ -10,7 +10,7 @@ let bankRecord = [
     { username: "ahmadJajja", pin: "1234", balance: 17000000 },
     { username: "jawadAhmad", pin: "1234", balance: 187000000 },
 ];
-let userInfo, user = { username: "", pin: "", balance: 0 }, amountToBeWithDraw;
+let userInfo, user = { username: "", pin: "", balance: 0 }, amountToBeWithDraw, isRepeat;
 //   printing welcome message
 console.log("  ......  ...   ....  ...........  ......       .......     .......    .....       .....  ............  ");
 console.log("  .....  .....  ..... ..........   .....      ..........   ..........  ......     ......  .......... ");
@@ -18,7 +18,7 @@ console.log("    ...  ......  ...  ...          ...       ....     ... ...      
 console.log("    ... ... ... ...   ........     ...      ....          ...      ... ... ...   ... ...  ......... ");
 console.log("     .....  .....     ...          ...       .....     .. ...     ...  ...   .....   ...  ...  ");
 console.log("     .....   .....    ..........   .......... ..........   ..........  ....  .....  ....  .......... ");
-console.log("      ...     ...     ...........  ..........   ........    ........   ...... ...  .....  ........... ");
+console.log("      ...     ...     ...........  ..........   ........    ........   ...... ...  .....  ........... \n");
 //function to ask user info
 const atm = async () => {
     do {
@@ -67,5 +67,16 @@ const atm = async () => {
     else {
         console.log(chalk.red("You have entered wrong user name.Please retry!"));
     }
+    isRepeat = await inquirer.prompt([
+        {
+            name: "repeat",
+            type: "confirm",
+            message: "Do want another operation?",
+        },
+    ]);
+    while (isRepeat.repeat) {
+        await atm();
+    }
+    console.log(isRepeat.repeat);
 };
 await atm();
