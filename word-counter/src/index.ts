@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 import chalk from "chalk";
 import inquirer from "inquirer";
 
@@ -20,5 +21,15 @@ const printingValues = () => {
     chalk.bgYellow.black(askedParagraph.paragraph.split(" ").length)
   );
 };
-await askingParagraph();
-printingValues();
+let again: { again: boolean };
+do {
+  await askingParagraph();
+  printingValues();
+  again = await inquirer.prompt([
+    {
+      name: "again",
+      type: "confirm",
+      message: "Do you want it again?",
+    },
+  ]);
+} while (again.again === true);

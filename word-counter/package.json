@@ -8,6 +8,7 @@
     "start": "tsc && node output/index.js"
   },
   "author": "",
+  "bin": "output/index.js",
   "license": "ISC",
   "dependencies": {
     "chalk": "^5.1.2",
