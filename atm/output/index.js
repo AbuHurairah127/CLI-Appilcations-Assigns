@@ -77,13 +77,6 @@ const atm = async () => {
                     console.log(chalk.bgRed("You have in sufficient balance."));
                 }
             }
-            isRepeat = await inquirer.prompt([
-                {
-                    name: "repeat",
-                    type: "confirm",
-                    message: "Do want another operation?",
-                },
-            ]);
             break;
         case "Transfer Money":
             let listOfBanks = [
@@ -103,6 +96,48 @@ const atm = async () => {
             ]);
             break;
     }
+    let bankAccountInfo;
+    do {
+        bankAccountInfo = await inquirer.prompt([
+            {
+                name: "accountHolderName",
+                type: "input",
+                message: "Enter account holder name:",
+            },
+            {
+                name: "accountNo",
+                type: "number",
+                message: "Enter account no.:",
+            },
+        ]);
+    } while (bankAccountInfo.accountHolderName.length < 3 ||
+        isNaN(Number(bankAccountInfo.accountNo)));
+    let amountToBeSent;
+    do {
+        amountToBeSent = await inquirer.prompt([
+            {
+                name: "amount",
+                type: "number",
+                message: `Enter the amount of money you want to send to ${bankAccountInfo.accountHolderName}`,
+            },
+        ]);
+    } while (isNaN(Number(amountToBeSent.amount)));
+    if (user === null || user === void 0 ? void 0 : user.balance) {
+        if (user.balance >= Number(amountToBeSent.amount)) {
+            console.log(`The remaining amount is ${(user.balance =
+                user.balance - Number(amountToBeSent.amount))}`);
+        }
+        else {
+            console.log(chalk.bgRed("You have in sufficient balance."));
+        }
+    }
+    isRepeat = await inquirer.prompt([
+        {
+            name: "repeat",
+            type: "confirm",
+            message: "Do want another operation?",
+        },
+    ]);
     while (isRepeat.repeat) {
         await atm();
     }

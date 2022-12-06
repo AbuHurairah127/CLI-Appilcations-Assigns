@@ -127,7 +127,44 @@ const atm = async () => {
       ]);
       break;
   }
-
+  let bankAccountInfo: { accountHolderName: string; accountNo: string };
+  do {
+    bankAccountInfo = await inquirer.prompt([
+      {
+        name: "accountHolderName",
+        type: "input",
+        message: "Enter account holder name:",
+      },
+      {
+        name: "accountNo",
+        type: "number",
+        message: "Enter account no.:",
+      },
+    ]);
+  } while (
+    bankAccountInfo.accountHolderName.length < 3 ||
+    isNaN(Number(bankAccountInfo.accountNo))
+  );
+  let amountToBeSent: { amount: string | number };
+  do {
+    amountToBeSent = await inquirer.prompt([
+      {
+        name: "amount",
+        type: "number",
+        message: `Enter the amount of money you want to send to ${bankAccountInfo.accountHolderName}`,
+      },
+    ]);
+  } while (isNaN(Number(amountToBeSent.amount)));
+  if (user?.balance) {
+    if (user.balance >= Number(amountToBeSent.amount)) {
+      console.log(
+        `The remaining amount is ${(user.balance =
+          user.balance - Number(amountToBeSent.amount))}`
+      );
+    } else {
+      console.log(chalk.bgRed("You have in sufficient balance."));
+    }
+  }
   isRepeat = await inquirer.prompt([
     {
       name: "repeat",
