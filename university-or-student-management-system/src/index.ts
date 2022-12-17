@@ -13,6 +13,7 @@ class Human {
     private password: string
   ) {}
 }
+/* The Teacher class extends the Human class and adds an employeeID property. */
 class Teacher extends Human {
   constructor(
     name: string,
@@ -30,15 +31,6 @@ let principal: { name: "Zia Khan"; userName: "ziakhan"; password: "1234" } = {
   userName: "ziakhan",
   password: "1234",
 };
-let abuhurairah: Teacher = new Teacher(
-  "Abu Hurairah",
-  "Muhammad Shafique",
-  19,
-  "abuhurairah127",
-  "1234",
-  "abuhurairah127"
-);
-console.log(abuhurairah);
 
 // Printing welcome msg
 const printWelcomeMsg = () => {
