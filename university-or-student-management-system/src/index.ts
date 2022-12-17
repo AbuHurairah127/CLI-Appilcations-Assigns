@@ -10,7 +10,8 @@ class Human {
     private fatherName: string,
     private age: number,
     private userName: string,
-    private password: string
+    private password: string,
+    private role: string
   ) {}
 }
 /* The Teacher class extends the Human class and adds an employeeID property. */
@@ -21,15 +22,39 @@ class Teacher extends Human {
     age: number,
     userName: string,
     password: string,
+    role: string,
     private employeeID: string
   ) {
-    super(name, fatherName, age, userName, password);
+    super(name, fatherName, age, userName, password, role);
   }
 }
-let principal: { name: "Zia Khan"; userName: "ziakhan"; password: "1234" } = {
+/* The Student class extends the Human class and adds a rollNo and course property to it. */
+class Student extends Human {
+  constructor(
+    name: string,
+    fatherName: string,
+    age: number,
+    userName: string,
+    password: string,
+    role: string,
+    private rollNo: string,
+    private course: string
+  ) {
+    super(name, fatherName, age, userName, password, role);
+  }
+}
+/* Creating an object with the name principal and assigning it the values of name, userName and
+password. */
+let principal: {
+  name: "Zia Khan";
+  userName: "ziakhan";
+  password: "1234";
+  role: "principle";
+} = {
   name: "Zia Khan",
   userName: "ziakhan",
   password: "1234",
+  role: "principle",
 };
 
 // Printing welcome msg

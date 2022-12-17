@@ -11,10 +11,18 @@ class Human {
         this.password = password;
     }
 }
+/* The Teacher class extends the Human class and adds an employeeID property. */
 class Teacher extends Human {
     constructor(name, fatherName, age, userName, password, employeeID) {
         super(name, fatherName, age, userName, password);
         this.employeeID = employeeID;
+    }
+}
+class Student extends Human {
+    constructor(name, fatherName, age, userName, password, rollNo, course) {
+        super(name, fatherName, age, userName, password);
+        this.rollNo = rollNo;
+        this.course = course;
     }
 }
 let principal = {
@@ -22,8 +30,6 @@ let principal = {
     userName: "ziakhan",
     password: "1234",
 };
-let abuhurairah = new Teacher("Abu Hurairah", "Muhammad Shafique", 19, "abuhurairah127", "1234", "abuhurairah127");
-console.log(abuhurairah);
 // Printing welcome msg
 const printWelcomeMsg = () => {
     console.log(chalk.blue("  ?J.       ^Y~              .5G^                                         ~GY   .:.                 "));
