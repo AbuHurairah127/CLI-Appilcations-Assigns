@@ -1,35 +1,42 @@
 import chalk from "chalk";
+import inquirer from "inquirer";
 // Creating a class using shortcut syntax
 /* A class named Human with a constructor that takes 5 parameters, all of which are private and required
 properties of the class. */
 class Human {
-    constructor(name, fatherName, age, userName, password) {
+    constructor(name, age, userName, password, role) {
         this.name = name;
-        this.fatherName = fatherName;
         this.age = age;
         this.userName = userName;
         this.password = password;
+        this.role = role;
     }
 }
 /* The Teacher class extends the Human class and adds an employeeID property. */
 class Teacher extends Human {
-    constructor(name, fatherName, age, userName, password, employeeID) {
-        super(name, fatherName, age, userName, password);
+    constructor(name, age, userName, password, role, employeeID) {
+        super(name, age, userName, password, role);
         this.employeeID = employeeID;
     }
 }
+/* The Student class extends the Human class and adds a rollNo and course property to it. */
 class Student extends Human {
-    constructor(name, fatherName, age, userName, password, rollNo, course) {
-        super(name, fatherName, age, userName, password);
+    constructor(name, age, userName, password, role, rollNo, course) {
+        super(name, age, userName, password, role);
         this.rollNo = rollNo;
         this.course = course;
     }
 }
+/* Creating an object with the name principal and assigning it the values of name, userName and
+password. */
 let principal = {
     name: "Zia Khan",
     userName: "ziakhan",
     password: "1234",
+    role: "principle",
 };
+let aliRazzaq = new Teacher("Ali Razzaq", 28, "aliRazzaq", "1234", "dummyID", "teacher");
+let teachers = [];
 // Printing welcome msg
 const printWelcomeMsg = () => {
     console.log(chalk.blue("  ?J.       ^Y~              .5G^                                         ~GY   .:.                 "));
@@ -45,7 +52,30 @@ const printWelcomeMsg = () => {
     console.log(chalk.blue("                                                                                        !##!        "));
     console.log(chalk.blue("                                                                                        :~          "));
 };
+let loginData;
+const login = async () => {
+    const loginAs = await inquirer.prompt([
+        {
+            name: "loginAs",
+            type: "list",
+            message: "Do you want to login as:",
+            choices: ["Student", "Teacher", "Principle"],
+        },
+        {
+            name: "userName",
+            type: "input",
+            message: "Enter your username assigned by the institute:",
+        },
+        {
+            name: "password",
+            type: "password",
+            mask: true,
+            message: "Enter your password assigned by the institute:",
+        },
+    ]);
+};
 const completeProcedure = () => {
     printWelcomeMsg();
+    login();
 };
 completeProcedure();

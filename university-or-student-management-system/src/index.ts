@@ -6,33 +6,33 @@ import inquirer from "inquirer";
 properties of the class. */
 class Human {
   constructor(
-    private name: string,
-    private fatherName: string,
-    private age: number,
-    private userName: string,
-    private password: string,
-    private role: string
+    protected name: string,
+    protected age: number,
+    protected userName: string,
+    protected password: string,
+    protected role: string
   ) {}
 }
 /* The Teacher class extends the Human class and adds an employeeID property. */
 class Teacher extends Human {
   constructor(
     name: string,
-    fatherName: string,
     age: number,
     userName: string,
     password: string,
     role: string,
     private employeeID: string
   ) {
-    super(name, fatherName, age, userName, password, role);
+    super(name, age, userName, password, role);
+  }
+  getUserName(): string {
+    return this.userName;
   }
 }
 /* The Student class extends the Human class and adds a rollNo and course property to it. */
 class Student extends Human {
   constructor(
     name: string,
-    fatherName: string,
     age: number,
     userName: string,
     password: string,
@@ -40,7 +40,7 @@ class Student extends Human {
     private rollNo: string,
     private course: string
   ) {
-    super(name, fatherName, age, userName, password, role);
+    super(name, age, userName, password, role);
   }
 }
 /* Creating an object with the name principal and assigning it the values of name, userName and
@@ -56,7 +56,16 @@ let principal: {
   password: "1234",
   role: "principle",
 };
-
+let aliRazzaq: Teacher = new Teacher(
+  "Ali Razzaq",
+  28,
+  "aliRazzaq",
+  "1234",
+  "dummyID",
+  "teacher"
+);
+let teachers: Teacher[] = [];
+teachers.push(aliRazzaq);
 // Printing welcome msg
 const printWelcomeMsg = () => {
   console.log(
@@ -120,7 +129,36 @@ const printWelcomeMsg = () => {
     )
   );
 };
+let loginData: { loginAs: string; userName: string; password: string };
+const login = async () => {
+  do {
+    loginData = await inquirer.prompt([
+      {
+        name: "loginAs",
+        type: "list",
+        message: "Do you want to login as:",
+        choices: ["Student", "Teacher", "Principle"],
+      },
+      {
+        name: "userName",
+        type: "input",
+        message: "Enter your username assigned by the institute:",
+      },
+      {
+        name: "password",
+        type: "password",
+        mask: true,
+        message: "Enter your 4 digit password assigned by the institute:",
+      },
+    ]);
+  } while (loginData.userName.length < 3 || loginData.password.length !== 4);
+  if (
+    teachers.find((teacher) => teacher.getUserName() === loginData.userName)
+  ) {
+  }
+};
 const completeProcedure = () => {
   printWelcomeMsg();
+  login();
 };
 completeProcedure();
