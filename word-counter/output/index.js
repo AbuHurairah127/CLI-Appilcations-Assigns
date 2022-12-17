@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 import chalk from "chalk";
 import inquirer from "inquirer";
 let askedParagraph;
@@ -13,5 +14,15 @@ const printingValues = () => {
     console.log("The number of characters in the the paragraph are=", chalk.bgYellow.black(askedParagraph.paragraph.length));
     console.log("The number of words in the the paragraph are=", chalk.bgYellow.black(askedParagraph.paragraph.split(" ").length));
 };
-await askingParagraph();
-printingValues();
+let again;
+do {
+    await askingParagraph();
+    printingValues();
+    again = await inquirer.prompt([
+        {
+            name: "again",
+            type: "confirm",
+            message: "Do you want it again?",
+        },
+    ]);
+} while (again.again === true);
