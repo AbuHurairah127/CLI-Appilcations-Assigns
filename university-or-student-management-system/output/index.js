@@ -1,8 +1,6 @@
 import inquirer from "inquirer";
 import showBanner from "node-banner";
 import { Teacher } from "./teacher.js";
-/* Creating an object with the name principal and assigning it the values of name, userName and
-password. */
 let principal = {
     name: "Zia Khan",
     userName: "ziakhan",
@@ -50,8 +48,20 @@ const login = async () => {
             if (teachers.find((teacher) => teacher.UserName === loginData.userName)) {
                 loggedInUser = teachers.find((teacher) => teacher.UserName === loginData.userName);
                 if (loggedInUser !== undefined) {
-                    isAuthenticated = true;
+                    if (loggedInUser.Password === loginData.password) {
+                        isAuthenticated = true;
+                    }
+                    else {
+                        loggedInUser === undefined;
+                        await login();
+                    }
                 }
+                else {
+                    await login();
+                }
+            }
+            else {
+                await login();
             }
             break;
         // Logging in STUDENT:
@@ -59,11 +69,36 @@ const login = async () => {
             if (students.find((student) => student.UserName === loginData.userName)) {
                 loggedInUser = students.find((student) => student.UserName === loginData.userName);
                 if (loggedInUser !== undefined) {
-                    isAuthenticated = true;
+                    if (loggedInUser.Password === loginData.password) {
+                        isAuthenticated = true;
+                    }
+                    else {
+                        loggedInUser === undefined;
+                        await login();
+                    }
+                }
+                else {
+                    await login();
                 }
             }
+            else {
+                await login();
+            }
             break;
+        // Logging in PRINCIPLE
         default:
+            if (principal.userName === loginData.userName) {
+                if (principal.password === loginData.password) {
+                    loggedInUser = principal;
+                    isAuthenticated = true;
+                }
+                else {
+                    await login();
+                }
+            }
+            else {
+                await login();
+            }
             break;
     }
 };

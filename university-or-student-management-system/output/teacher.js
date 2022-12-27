@@ -8,4 +8,7 @@ export class Teacher extends Human {
     get UserName() {
         return this.userName;
     }
+    get Password() {
+        return this.password;
+    }
 }
