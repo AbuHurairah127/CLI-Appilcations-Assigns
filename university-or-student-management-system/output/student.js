@@ -6,4 +6,7 @@ export class Student extends Human {
         this.rollNo = rollNo;
         this.course = course;
     }
+    get UserName() {
+        return this.userName;
+    }
 }

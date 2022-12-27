@@ -12,7 +12,7 @@ export class Teacher extends Human {
   ) {
     super(name, age, userName, password, role);
   }
-  getUserName(): string {
+  get UserName(): string {
     return this.userName;
   }
 }

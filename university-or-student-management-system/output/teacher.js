@@ -5,7 +5,7 @@ export class Teacher extends Human {
         super(name, age, userName, password, role);
         this.employeeID = employeeID;
     }
-    getUserName() {
+    get UserName() {
         return this.userName;
     }
 }

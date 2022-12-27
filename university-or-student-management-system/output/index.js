@@ -10,7 +10,10 @@ let principal = {
     role: "principle",
 };
 let aliRazzaq = new Teacher("Ali Razzaq", 28, "aliRazzaq", "1234", "dummyID", "teacher");
+let isAuthenticated = true;
+let loggedInUser;
 let teachers = [];
+let students = [];
 teachers.push(aliRazzaq);
 // Printing welcome msg
 const printWelcomeMsg = async () => {
@@ -41,11 +44,31 @@ const login = async () => {
             },
         ]);
     } while (loginData.userName.length < 3 || loginData.password.length !== 4);
-    if (teachers.find((teacher) => teacher.getUserName() === loginData.userName)) {
+    switch (loginData.loginAs) {
+        // Logging in TEACHER:
+        case "Teacher":
+            if (teachers.find((teacher) => teacher.UserName === loginData.userName)) {
+                loggedInUser = teachers.find((teacher) => teacher.UserName === loginData.userName);
+                if (loggedInUser !== undefined) {
+                    isAuthenticated = true;
+                }
+            }
+            break;
+        // Logging in STUDENT:
+        case "Student":
+            if (students.find((student) => student.UserName === loginData.userName)) {
+                loggedInUser = students.find((student) => student.UserName === loginData.userName);
+                if (loggedInUser !== undefined) {
+                    isAuthenticated = true;
+                }
+            }
+            break;
+        default:
+            break;
     }
 };
 const completeProcedure = async () => {
     await printWelcomeMsg();
-    login();
+    await login();
 };
 completeProcedure();

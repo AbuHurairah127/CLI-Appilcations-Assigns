@@ -12,4 +12,7 @@ export class Student extends Human {
   ) {
     super(name, age, userName, password, role);
   }
+  get UserName(): string {
+    return this.userName;
+  }
 }

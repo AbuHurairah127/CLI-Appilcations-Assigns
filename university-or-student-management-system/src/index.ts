@@ -1,6 +1,7 @@
 import chalk from "chalk";
 import inquirer from "inquirer";
 import showBanner from "node-banner";
+import { Student } from "./student.js";
 import { Teacher } from "./teacher.js";
 
 /* Creating an object with the name principal and assigning it the values of name, userName and
@@ -24,7 +25,10 @@ let aliRazzaq: Teacher = new Teacher(
   "dummyID",
   "teacher"
 );
+let isAuthenticated: boolean = true;
+let loggedInUser: undefined | Teacher | Student;
 let teachers: Teacher[] = [];
+let students: Student[] = [];
 teachers.push(aliRazzaq);
 // Printing welcome msg
 const printWelcomeMsg = async () => {
@@ -55,13 +59,35 @@ const login = async () => {
       },
     ]);
   } while (loginData.userName.length < 3 || loginData.password.length !== 4);
-  if (
-    teachers.find((teacher) => teacher.getUserName() === loginData.userName)
-  ) {
+  switch (loginData.loginAs) {
+    // Logging in TEACHER:
+    case "Teacher":
+      if (teachers.find((teacher) => teacher.UserName === loginData.userName)) {
+        loggedInUser = teachers.find(
+          (teacher) => teacher.UserName === loginData.userName
+        );
+        if (loggedInUser !== undefined) {
+          isAuthenticated = true;
+        }
+      }
+      break;
+    // Logging in STUDENT:
+    case "Student":
+      if (students.find((student) => student.UserName === loginData.userName)) {
+        loggedInUser = students.find(
+          (student) => student.UserName === loginData.userName
+        );
+        if (loggedInUser !== undefined) {
+          isAuthenticated = true;
+        }
+      }
+      break;
+    default:
+      break;
   }
 };
 const completeProcedure = async () => {
   await printWelcomeMsg();
-  login();
+  await login();
 };
 completeProcedure();
