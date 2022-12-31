@@ -38,6 +38,13 @@ const printWelcomeMsg = async () => {
   })();
 };
 let loginData: { loginAs: string; userName: string; password: string };
+
+/**
+ * It takes in user input and checks if the user exists in the database. If the user exists, it checks
+ * if the password is correct. If the password is correct, it sets the loggedInUser variable to the
+ * user object. If the password is incorrect, it calls the login function again. If the user doesn't
+ * exist, it calls the login function again.
+ */
 const login = async () => {
   do {
     loginData = await inquirer.prompt([
